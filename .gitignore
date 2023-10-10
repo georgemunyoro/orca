@@ -1,0 +1,8 @@
+orc
+build
+.cache
+*.ll
+*.o
+*.out
+.DS_Store
+CMakeFiles
