@@ -178,7 +178,7 @@ Expression *Parser::print_statement() {
 Expression *Parser::variable_declaration() {
   Token name = consume(IDENTIFIER, "Expected variable name.");
 
-  bool initializer_set;
+  bool initializer_set = false;
   Expression *initializer = new LiteralExpr();
 
   if (match(LEFT_BRACK)) {
@@ -195,13 +195,15 @@ Expression *Parser::variable_declaration() {
   }
 
   if (match(EQUAL)) {
+    auto expr = expression();
     if (initializer_set) {
-      auto expr = expression();
       if (expr->getType() != ARRAY_EXPR)
         throw std::runtime_error("Declared array with length specifier but "
                                  "used non-array initializer.");
 
       ((ArrayExpr *)initializer)->values = ((ArrayExpr *)expr)->values;
+    } else {
+      initializer = expr;
     }
   }
 

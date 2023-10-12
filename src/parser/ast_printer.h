@@ -7,30 +7,31 @@ public:
 
   void print(Expression *expr);
 
-  void visit(BinaryExpr expr) const override;
-  void visit(GroupingExpr expr) const override;
-  void visit(LiteralExpr expr) const override;
-  void visit(UnaryExpr expr) const override;
-  void visit(CallExpr expr) const override;
-  void visit(VariableReferenceExpr expr) const override;
-  void visit(GetExpr expr) const override;
-  void visit(SetExpr expr) const override;
-  void visit(ThisExpr expr) const override;
-  void visit(ArrayExpr expr) const override;
-  void visit(IndexExpr expr) const override;
-  void visit(SetIndexExpr expr) const override;
+  void visit(BinaryExpr expr) override;
+  void visit(GroupingExpr expr) override;
+  void visit(LiteralExpr expr) override;
+  void visit(UnaryExpr expr) override;
+  void visit(CallExpr expr) override;
+  void visit(VariableReferenceExpr expr) override;
+  void visit(GetExpr expr) override;
+  void visit(SetExpr expr) override;
+  void visit(ThisExpr expr) override;
+  void visit(ArrayExpr expr) override;
+  void visit(IndexExpr expr) override;
+  void visit(SetIndexExpr expr) override;
 
-  void visit(ExpressionStmt stmt) const override;
-  void visit(PrintStmt stmt) const override;
-  void visit(VariableDeclarationStmt stmt) const override;
-  void visit(AssignmentStmt stmt) const override;
-  void visit(BlockStmt stmt) const override;
-  void visit(IfStmt stmt) const override;
-  void visit(WhileStmt stmt) const override;
-  void visit(ReturnStmt stmt) const override;
-  void visit(ClassStmt stmt) const override;
-  void visit(FunctionDeclarationStmt stmt) const override;
+  void visit(ExpressionStmt stmt) override;
+  void visit(PrintStmt stmt) override;
+  void visit(VariableDeclarationStmt stmt) override;
+  void visit(AssignmentStmt stmt) override;
+  void visit(BlockStmt stmt) override;
+  void visit(IfStmt stmt) override;
+  void visit(WhileStmt stmt) override;
+  void visit(ReturnStmt stmt) override;
+  void visit(ClassStmt stmt) override;
+  void visit(FunctionDeclarationStmt stmt) override;
 
 private:
   int indent = 0;
+  void print_indent();
 };

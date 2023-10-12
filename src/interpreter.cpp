@@ -1,8 +1,10 @@
 
 #include "interpreter.h"
+#include "evaluator/evaluator.h"
 #include "lexer.h"
 #include "parser/ast_printer.h"
 #include "parser/parser.h"
+#include "variable/resolver.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -29,7 +31,11 @@ void Interpreter::run(std::string source) {
   std::vector<Expression *> exprs = parser.parse();
 
   AstPrinter printer = AstPrinter();
+  Evaluator *evaluator = new Evaluator();
+  Resolver *resolver = new Resolver(evaluator);
+
   for (Expression *expr : exprs) {
     printer.print(expr);
+    resolver->resolve_expr(expr);
   }
 }

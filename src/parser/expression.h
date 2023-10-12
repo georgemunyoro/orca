@@ -32,17 +32,16 @@ enum ExpressionType {
 
 class Expression {
 public:
-  template <typename T> T accept(const ExpressionVisitor<T> &visitor);
+  template <typename T> T accept(ExpressionVisitor<T> &visitor);
 
   virtual ~Expression() = default;
   virtual ExpressionType getType() const = 0;
 
 protected:
-  virtual RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) {
+  virtual RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) {
     return RuntimeValue();
   };
-  virtual void do_accept(const ExpressionVisitor<void> &visitor){};
+  virtual void do_accept(ExpressionVisitor<void> &visitor){};
 };
 
 // Expressions
@@ -73,85 +72,85 @@ class FunctionDeclarationStmt;
 
 template <typename T> class ExpressionVisitor {
 public:
-  virtual T visit(BinaryExpr expr) const = 0;
-  virtual T visit(GroupingExpr expr) const = 0;
-  virtual T visit(LiteralExpr expr) const = 0;
-  virtual T visit(UnaryExpr expr) const = 0;
-  virtual T visit(CallExpr expr) const = 0;
-  virtual T visit(VariableReferenceExpr expr) const = 0;
-  virtual T visit(GetExpr expr) const = 0;
-  virtual T visit(SetExpr expr) const = 0;
-  virtual T visit(ThisExpr expr) const = 0;
-  virtual T visit(ArrayExpr expr) const = 0;
-  virtual T visit(IndexExpr expr) const = 0;
-  virtual T visit(SetIndexExpr expr) const = 0;
+  virtual T visit(BinaryExpr expr) = 0;
+  virtual T visit(GroupingExpr expr) = 0;
+  virtual T visit(LiteralExpr expr) = 0;
+  virtual T visit(UnaryExpr expr) = 0;
+  virtual T visit(CallExpr expr) = 0;
+  virtual T visit(VariableReferenceExpr expr) = 0;
+  virtual T visit(GetExpr expr) = 0;
+  virtual T visit(SetExpr expr) = 0;
+  virtual T visit(ThisExpr expr) = 0;
+  virtual T visit(ArrayExpr expr) = 0;
+  virtual T visit(IndexExpr expr) = 0;
+  virtual T visit(SetIndexExpr expr) = 0;
 
-  virtual T visit(ExpressionStmt stmt) const = 0;
-  virtual T visit(PrintStmt stmt) const = 0;
-  virtual T visit(VariableDeclarationStmt stmt) const = 0;
-  virtual T visit(AssignmentStmt stmt) const = 0;
-  virtual T visit(BlockStmt stmt) const = 0;
-  virtual T visit(IfStmt stmt) const = 0;
-  virtual T visit(WhileStmt stmt) const = 0;
-  virtual T visit(ReturnStmt stmt) const = 0;
-  virtual T visit(ClassStmt stmt) const = 0;
-  virtual T visit(FunctionDeclarationStmt stmt) const = 0;
+  virtual T visit(ExpressionStmt stmt) = 0;
+  virtual T visit(PrintStmt stmt) = 0;
+  virtual T visit(VariableDeclarationStmt stmt) = 0;
+  virtual T visit(AssignmentStmt stmt) = 0;
+  virtual T visit(BlockStmt stmt) = 0;
+  virtual T visit(IfStmt stmt) = 0;
+  virtual T visit(WhileStmt stmt) = 0;
+  virtual T visit(ReturnStmt stmt) = 0;
+  virtual T visit(ClassStmt stmt) = 0;
+  virtual T visit(FunctionDeclarationStmt stmt) = 0;
 
   virtual ~ExpressionVisitor() = default;
 };
 
 template <> class ExpressionVisitor<RuntimeValue> {
 public:
-  virtual RuntimeValue visit(BinaryExpr expr) const = 0;
-  virtual RuntimeValue visit(GroupingExpr expr) const = 0;
-  virtual RuntimeValue visit(LiteralExpr expr) const = 0;
-  virtual RuntimeValue visit(UnaryExpr expr) const = 0;
-  virtual RuntimeValue visit(CallExpr expr) const = 0;
-  virtual RuntimeValue visit(VariableReferenceExpr expr) const = 0;
-  virtual RuntimeValue visit(GetExpr expr) const = 0;
-  virtual RuntimeValue visit(SetExpr expr) const = 0;
-  virtual RuntimeValue visit(ThisExpr expr) const = 0;
-  virtual RuntimeValue visit(ArrayExpr expr) const = 0;
-  virtual RuntimeValue visit(IndexExpr expr) const = 0;
-  virtual RuntimeValue visit(SetIndexExpr expr) const = 0;
+  virtual RuntimeValue visit(BinaryExpr expr) = 0;
+  virtual RuntimeValue visit(GroupingExpr expr) = 0;
+  virtual RuntimeValue visit(LiteralExpr expr) = 0;
+  virtual RuntimeValue visit(UnaryExpr expr) = 0;
+  virtual RuntimeValue visit(CallExpr expr) = 0;
+  virtual RuntimeValue visit(VariableReferenceExpr expr) = 0;
+  virtual RuntimeValue visit(GetExpr expr) = 0;
+  virtual RuntimeValue visit(SetExpr expr) = 0;
+  virtual RuntimeValue visit(ThisExpr expr) = 0;
+  virtual RuntimeValue visit(ArrayExpr expr) = 0;
+  virtual RuntimeValue visit(IndexExpr expr) = 0;
+  virtual RuntimeValue visit(SetIndexExpr expr) = 0;
 
-  virtual RuntimeValue visit(ExpressionStmt stmt) const = 0;
-  virtual RuntimeValue visit(PrintStmt stmt) const = 0;
-  virtual RuntimeValue visit(VariableDeclarationStmt stmt) const = 0;
-  virtual RuntimeValue visit(AssignmentStmt stmt) const = 0;
-  virtual RuntimeValue visit(BlockStmt stmt) const = 0;
-  virtual RuntimeValue visit(IfStmt stmt) const = 0;
-  virtual RuntimeValue visit(WhileStmt stmt) const = 0;
-  virtual RuntimeValue visit(ReturnStmt stmt) const = 0;
-  virtual RuntimeValue visit(ClassStmt stmt) const = 0;
-  virtual RuntimeValue visit(FunctionDeclarationStmt stmt) const = 0;
+  virtual RuntimeValue visit(ExpressionStmt stmt) = 0;
+  virtual RuntimeValue visit(PrintStmt stmt) = 0;
+  virtual RuntimeValue visit(VariableDeclarationStmt stmt) = 0;
+  virtual RuntimeValue visit(AssignmentStmt stmt) = 0;
+  virtual RuntimeValue visit(BlockStmt stmt) = 0;
+  virtual RuntimeValue visit(IfStmt stmt) = 0;
+  virtual RuntimeValue visit(WhileStmt stmt) = 0;
+  virtual RuntimeValue visit(ReturnStmt stmt) = 0;
+  virtual RuntimeValue visit(ClassStmt stmt) = 0;
+  virtual RuntimeValue visit(FunctionDeclarationStmt stmt) = 0;
 };
 
 template <> class ExpressionVisitor<void> {
 public:
-  virtual void visit(BinaryExpr expr) const = 0;
-  virtual void visit(GroupingExpr expr) const = 0;
-  virtual void visit(LiteralExpr expr) const = 0;
-  virtual void visit(UnaryExpr expr) const = 0;
-  virtual void visit(CallExpr expr) const = 0;
-  virtual void visit(VariableReferenceExpr expr) const = 0;
-  virtual void visit(GetExpr expr) const = 0;
-  virtual void visit(SetExpr expr) const = 0;
-  virtual void visit(ThisExpr expr) const = 0;
-  virtual void visit(ArrayExpr expr) const = 0;
-  virtual void visit(IndexExpr expr) const = 0;
-  virtual void visit(SetIndexExpr expr) const = 0;
+  virtual void visit(BinaryExpr expr) = 0;
+  virtual void visit(GroupingExpr expr) = 0;
+  virtual void visit(LiteralExpr expr) = 0;
+  virtual void visit(UnaryExpr expr) = 0;
+  virtual void visit(CallExpr expr) = 0;
+  virtual void visit(VariableReferenceExpr expr) = 0;
+  virtual void visit(GetExpr expr) = 0;
+  virtual void visit(SetExpr expr) = 0;
+  virtual void visit(ThisExpr expr) = 0;
+  virtual void visit(ArrayExpr expr) = 0;
+  virtual void visit(IndexExpr expr) = 0;
+  virtual void visit(SetIndexExpr expr) = 0;
 
-  virtual void visit(ExpressionStmt stmt) const = 0;
-  virtual void visit(PrintStmt stmt) const = 0;
-  virtual void visit(VariableDeclarationStmt stmt) const = 0;
-  virtual void visit(AssignmentStmt stmt) const = 0;
-  virtual void visit(BlockStmt stmt) const = 0;
-  virtual void visit(IfStmt stmt) const = 0;
-  virtual void visit(WhileStmt stmt) const = 0;
-  virtual void visit(ReturnStmt stmt) const = 0;
-  virtual void visit(ClassStmt stmt) const = 0;
-  virtual void visit(FunctionDeclarationStmt stmt) const = 0;
+  virtual void visit(ExpressionStmt stmt) = 0;
+  virtual void visit(PrintStmt stmt) = 0;
+  virtual void visit(VariableDeclarationStmt stmt) = 0;
+  virtual void visit(AssignmentStmt stmt) = 0;
+  virtual void visit(BlockStmt stmt) = 0;
+  virtual void visit(IfStmt stmt) = 0;
+  virtual void visit(WhileStmt stmt) = 0;
+  virtual void visit(ReturnStmt stmt) = 0;
+  virtual void visit(ClassStmt stmt) = 0;
+  virtual void visit(FunctionDeclarationStmt stmt) = 0;
 };
 
 class BinaryExpr : public Expression {
@@ -165,12 +164,11 @@ public:
   Expression &right;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -183,12 +181,11 @@ public:
   Expression &expr;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -202,12 +199,11 @@ public:
   Literal value;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -221,12 +217,11 @@ public:
   Expression &right;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -242,12 +237,11 @@ public:
   std::vector<Expression *> arguments;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -260,12 +254,11 @@ public:
   Token op;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -279,12 +272,11 @@ public:
   Expression *index;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -300,12 +292,11 @@ public:
   Expression *value;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -319,12 +310,11 @@ public:
   Token name;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -340,12 +330,11 @@ public:
   Token name;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -358,12 +347,11 @@ public:
   Token keyword;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -379,12 +367,11 @@ public:
   Expression *length;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -403,12 +390,11 @@ public:
   Expression *expression;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -421,12 +407,11 @@ public:
   Expression *expression;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -441,12 +426,11 @@ public:
   Expression *initializer;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -460,12 +444,11 @@ public:
   Expression *value;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -478,12 +461,11 @@ public:
   std::vector<Statement *> statements;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -500,12 +482,11 @@ public:
   Statement *else_branch;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -520,12 +501,11 @@ public:
   Statement *body;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -542,12 +522,11 @@ public:
   std::vector<Statement *> body;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -562,12 +541,11 @@ public:
   Expression *value;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };
@@ -582,12 +560,11 @@ public:
   std::vector<FunctionDeclarationStmt> methods;
 
 protected:
-  RuntimeValue
-  do_accept(const ExpressionVisitor<RuntimeValue> &visitor) override {
+  RuntimeValue do_accept(ExpressionVisitor<RuntimeValue> &visitor) override {
     return visitor.visit(*this);
   };
 
-  void do_accept(const ExpressionVisitor<void> &visitor) override {
+  void do_accept(ExpressionVisitor<void> &visitor) override {
     return visitor.visit(*this);
   };
 };

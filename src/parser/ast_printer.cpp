@@ -7,149 +7,223 @@ void AstPrinter::print(Expression *expr) {
   printf("\n");
 }
 
-void AstPrinter::visit(BinaryExpr expr) const {
-  printf("( Binary %s ", expr.op.lexeme.c_str());
-  expr.left.accept<void>(*this);
-  expr.right.accept<void>(*this);
-  printf(" )");
-};
-
-void AstPrinter::visit(LiteralExpr expr) const {
-  printf(" %s ", expr.value.as_string().c_str());
-};
-
-void AstPrinter::visit(GroupingExpr expr) const {
-  printf("[");
-  expr.expr.accept(*this);
-  printf("]");
-};
-
-void AstPrinter::visit(UnaryExpr expr) const {
-  printf("( Unary %s ", expr.op.lexeme.c_str());
-  expr.right.accept(*this);
-  printf(" )");
-};
-
-void AstPrinter::visit(CallExpr expr) const {
-  printf("( Call");
-  expr.callee->accept(*this);
-  for (auto arg : expr.arguments) {
-    printf("\n");
-    arg->accept(*this);
+void AstPrinter::print_indent() {
+  int i = indent;
+  while (i--) {
+    printf("    ");
   }
-  printf(")");
 }
 
-void AstPrinter::visit(VariableReferenceExpr expr) const {
-  printf("( VarRef %s )", expr.op.lexeme.c_str());
+void AstPrinter::visit(BinaryExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("Binary %s", expr.op.lexeme.c_str());
+  ++indent;
+  expr.left.accept<void>(*this);
+  expr.right.accept<void>(*this);
+  --indent;
 };
 
-void AstPrinter::visit(GetExpr expr) const {
-  printf("( Get %s", expr.name.lexeme.c_str());
+void AstPrinter::visit(LiteralExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("%s", expr.value.as_string().c_str());
+};
+
+void AstPrinter::visit(GroupingExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("Grouping");
+  ++indent;
+  expr.expr.accept(*this);
+  --indent;
+};
+
+void AstPrinter::visit(UnaryExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("Unary %s ", expr.op.lexeme.c_str());
+  ++indent;
+  expr.right.accept(*this);
+  --indent;
+};
+
+void AstPrinter::visit(CallExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("Call");
+  ++indent;
+  expr.callee->accept(*this);
+  printf(" <-- CALLEE");
+  for (auto arg : expr.arguments) {
+    arg->accept(*this);
+  }
+  --indent;
+}
+
+void AstPrinter::visit(VariableReferenceExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("VarRef %s", expr.op.lexeme.c_str());
+};
+
+void AstPrinter::visit(GetExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("Get %s", expr.name.lexeme.c_str());
+  ++indent;
   expr.obj->accept(*this);
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(SetExpr expr) const {
-  printf("( Set %s", expr.name.lexeme.c_str());
+void AstPrinter::visit(SetExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("Set %s", expr.name.lexeme.c_str());
+  ++indent;
   expr.obj->accept(*this);
   expr.value->accept(*this);
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(ThisExpr expr) const { printf(" This "); };
+void AstPrinter::visit(ThisExpr expr) {
+  printf("\n");
+  print_indent();
+  printf("This");
+};
 
-void AstPrinter::visit(IndexExpr expr) const {
-  printf("( Index ");
+void AstPrinter::visit(IndexExpr expr) {
+  print_indent();
+  printf("Index ");
+  ++indent;
   expr.index->accept(*this);
   expr.obj->accept(*this);
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(SetIndexExpr expr) const {
-  printf("( SetIndex ");
+void AstPrinter::visit(SetIndexExpr expr) {
+  print_indent();
+  printf("SetIndex \n");
+  ++indent;
   expr.index->accept(*this);
   expr.obj->accept(*this);
   expr.value->accept(*this);
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(ArrayExpr expr) const {
-  printf("( Array[");
+void AstPrinter::visit(ArrayExpr expr) {
+  print_indent();
+  printf("Array");
+  ++indent;
   expr.length->accept(*this);
-  printf("]");
+
+  printf("\n");
+  print_indent();
+  printf("--------");
+
   for (Expression *value : expr.values) {
     value->accept(*this);
   }
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(ExpressionStmt stmt) const {
+void AstPrinter::visit(ExpressionStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("ExpressionStmt");
+  ++indent;
   stmt.expression->accept(*this);
+  --indent;
 }
 
-void AstPrinter::visit(PrintStmt stmt) const {
-  printf("( Print");
+void AstPrinter::visit(PrintStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("Print");
+  ++indent;
   stmt.expression->accept(*this);
-  printf(")");
+  --indent;
 }
 
-void AstPrinter::visit(VariableDeclarationStmt stmt) const {
-  printf("( VarDecl %s", stmt.name.lexeme.c_str());
+void AstPrinter::visit(VariableDeclarationStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("VarDecl %s", stmt.name.lexeme.c_str());
+  ++indent;
   stmt.initializer->accept(*this);
-  printf(")");
+  --indent;
 }
 
-void AstPrinter::visit(AssignmentStmt stmt) const {
-  printf("( Assign %s ", stmt.name.lexeme.c_str());
+void AstPrinter::visit(AssignmentStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("Assign %s ", stmt.name.lexeme.c_str());
+  ++indent;
   stmt.value->accept(*this);
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(BlockStmt stmt) const {
-  printf("( BLOCK\n");
+void AstPrinter::visit(BlockStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("BLOCK");
+  ++indent;
   for (Statement *e : stmt.statements) {
     e->accept(*this);
-    printf("\n");
   }
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(IfStmt stmt) const {
-  printf("( If");
+void AstPrinter::visit(IfStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("If");
+  ++indent;
   stmt.condition->accept(*this);
   stmt.then_branch->accept(*this);
   stmt.else_branch->accept(*this);
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(WhileStmt stmt) const {
-  printf("( While");
+void AstPrinter::visit(WhileStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("While");
+  ++indent;
   stmt.condition->accept(*this);
   stmt.body->accept(*this);
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(ReturnStmt stmt) const {
-  printf("( Return");
+void AstPrinter::visit(ReturnStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("Return");
+  ++indent;
   stmt.value->accept(*this);
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(ClassStmt stmt) const {
-  printf("( Class %s", stmt.name.lexeme.c_str());
+void AstPrinter::visit(ClassStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("Class %s", stmt.name.lexeme.c_str());
+  ++indent;
   for (auto method : stmt.methods) {
-    printf("\n");
     method.accept(*this);
+    printf("\n");
   }
-  printf(")");
+  --indent;
 };
 
-void AstPrinter::visit(FunctionDeclarationStmt stmt) const {
-  printf("( FunDecl %s: ", stmt.name.lexeme.c_str());
+void AstPrinter::visit(FunctionDeclarationStmt stmt) {
+  printf("\n");
+  print_indent();
+  printf("FunDecl %s: ", stmt.name.lexeme.c_str());
   for (auto param : stmt.params) {
-    printf(" %s", param.lexeme.c_str());
+    printf("%s ", param.lexeme.c_str());
   }
+  ++indent;
   BlockStmt(stmt.body).accept(*this);
-  printf(")");
+  --indent;
 };
