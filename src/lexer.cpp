@@ -58,8 +58,10 @@ void Lexer::scan_string() {
 
   advance();
 
-  std::string text = source.substr(start + 1, current - start - 1);
-  Literal value = new Literal(text);
+  std::string text = source.substr(start + 1, current - start - 2);
+  Literal value = new Literal();
+  value.value = text;
+  value.type = STR;
   add_token(STRING, text, value);
 }
 
@@ -99,7 +101,13 @@ void Lexer::scan_token() {
     add_token(LEFT_BRACE);
     break;
   case '}':
-    add_token(LEFT_BRACE);
+    add_token(RIGHT_BRACE);
+    break;
+  case '[':
+    add_token(LEFT_BRACK);
+    break;
+  case ']':
+    add_token(RIGHT_BRACK);
     break;
   case ',':
     add_token(COMMA);

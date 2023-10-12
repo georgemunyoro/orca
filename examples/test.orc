@@ -1,13 +1,6 @@
 
-print "Hello, World!";
+var names[5] = [1,2,3,4];
+names[names[0] + 4] = 5;
 
-var a = 19;
-var b = 18;
+print names[4];
 
-var difference = a - b;
-
-if (difference > 3) {
-    print "The difference is larger than 3";
-} else {
-    print "The difference is not larger than 3";
-}

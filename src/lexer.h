@@ -12,6 +12,8 @@ enum TokenType {
   RIGHT_PAREN,
   LEFT_BRACE,
   RIGHT_BRACE,
+  LEFT_BRACK,
+  RIGHT_BRACK,
   COMMA,
   DOT,
   MINUS,
@@ -34,6 +36,7 @@ enum TokenType {
   IDENTIFIER,
   STRING,
   NUMBER,
+  ARRAY,
 
   // Keywords.
   AND,
@@ -62,9 +65,11 @@ static const std::unordered_map<TokenType, std::string> TOK_STR = {
     std::make_pair(RIGHT_PAREN, "RIGHT_PAREN"),
     std::make_pair(LEFT_BRACE, "LEFT_BRACE"),
     std::make_pair(RIGHT_BRACE, "RIGHT_BRACE"), std::make_pair(COMMA, "COMMA"),
-    std::make_pair(DOT, "DOT"), std::make_pair(MINUS, "MINUS"),
-    std::make_pair(PLUS, "PLUS"), std::make_pair(SEMICOLON, "SEMICOLON"),
-    std::make_pair(SLASH, "SLASH"), std::make_pair(STAR, "STAR"),
+    std::make_pair(LEFT_BRACK, "LEFT_BRACK"),
+    std::make_pair(RIGHT_BRACK, "RIGHT_BRACK"), std::make_pair(DOT, "DOT"),
+    std::make_pair(MINUS, "MINUS"), std::make_pair(PLUS, "PLUS"),
+    std::make_pair(SEMICOLON, "SEMICOLON"), std::make_pair(SLASH, "SLASH"),
+    std::make_pair(STAR, "STAR"),
 
     // One or two character tokens.
     std::make_pair(BANG, "BANG"), std::make_pair(BANG_EQUAL, "BANG_EQUAL"),
@@ -99,8 +104,9 @@ class Literal {
 public:
   Literal() {}
   Literal(float i) : value(i), type(NUM) {}
-  Literal(std::string s) : value(s), type(STR) {}
   Literal(bool b) : value(b), type(BOOL) {}
+
+  Literal(std::string s, LiteralType t) : value(s), type(STR) {}
 
   LiteralType getType() { return type; };
   std::variant<std::monostate, float, std::string, bool> getValue() {
@@ -109,6 +115,21 @@ public:
 
   LiteralType type = NIL_;
   std::variant<std::monostate, float, std::string, bool> value;
+
+  std::string as_string() const {
+    switch (type) {
+    case NIL_:
+      return "nil";
+    case NUM:
+      return std::to_string(std::get<float>(value));
+    case STR:
+      return std::get<std::string>(value);
+    case BOOL: {
+      bool v = std::get<bool>(value);
+      return v ? "true" : "false";
+    }
+    }
+  }
 
 private:
 };

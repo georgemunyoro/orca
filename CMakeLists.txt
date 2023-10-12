@@ -14,7 +14,22 @@ separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 
 # Build source
-add_executable(orc src/main.cpp src/lexer.cpp src/utils.cpp src/interpreter.cpp)
+add_executable(
+    orc
+    src/main.cpp
+    src/lexer.cpp
+    src/utils.cpp
+    src/interpreter.cpp
+    src/parser/expression.cpp
+    src/parser/parser.cpp
+    src/parser/statement.cpp
+    src/parser/ast_printer.cpp
+    src/evaluator/evaluator.cpp
+    src/evaluator/runtime_value.cpp
+    src/evaluator/runtime_callable.cpp
+    src/variable/environment.cpp
+    src/variable/resolver.cpp
+)
 
 # Find the libraries that correspond to the LLVM components
 llvm_map_components_to_libnames(llvm_libs support core irreader)
