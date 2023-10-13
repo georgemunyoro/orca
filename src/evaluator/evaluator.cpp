@@ -175,7 +175,7 @@ RuntimeValue *Evaluator::visit(CallExpr *expr) {
     if (arguments.size() != callee_callable->arity()) {
       throw std::runtime_error("Received incorrect number of args.");
     }
-    return new RuntimeValue(callee_callable->call(this, arguments));
+    return callee_callable->call(this, arguments);
   }
 
   throw std::runtime_error("Attempted to call non-callable object.");
@@ -194,9 +194,30 @@ RuntimeValue *Evaluator::lookup_variable(Token name, Expression *expr) {
   return globals->get(name);
 }
 
-RuntimeValue *Evaluator::visit(GetExpr *expr){};
-RuntimeValue *Evaluator::visit(SetExpr *expr){};
-RuntimeValue *Evaluator::visit(ThisExpr *expr){};
+RuntimeValue *Evaluator::visit(GetExpr *expr) {
+  RuntimeValue *obj = evaluate(expr->obj);
+
+  if (obj->get_type() == RT_INSTANCE)
+    return ((RuntimeClassInstance *)obj)->get(expr->name);
+
+  throw std::runtime_error("Only object instances have properties.");
+};
+
+RuntimeValue *Evaluator::visit(SetExpr *expr) {
+  RuntimeValue *obj = evaluate(expr->obj);
+
+  if (obj->get_type() != RT_INSTANCE)
+    throw std::runtime_error("Only instances have fields.");
+
+  RuntimeValue *value = evaluate(expr->value);
+  ((RuntimeClassInstance *)obj)->set(expr->name, value);
+
+  return value;
+};
+
+RuntimeValue *Evaluator::visit(ThisExpr *expr) {
+  return lookup_variable(expr->keyword, expr);
+};
 
 RuntimeValue *Evaluator::visit(ArrayExpr *expr) {
   std::vector<RuntimeValue *> values;
@@ -297,7 +318,21 @@ RuntimeValue *Evaluator::visit(WhileStmt *stmt) {
 };
 
 RuntimeValue *Evaluator::visit(ReturnStmt *stmt){};
-RuntimeValue *Evaluator::visit(ClassStmt *stmt){};
+
+RuntimeValue *Evaluator::visit(ClassStmt *stmt) {
+  environment->define(stmt->name.lexeme, new RuntimeValue());
+
+  std::unordered_map<std::string, RuntimeFunction *> methods;
+  for (FunctionDeclarationStmt method : stmt->methods) {
+    RuntimeFunction *function = new RuntimeFunction(method, environment);
+    methods.insert_or_assign(method.name.lexeme, function);
+  }
+
+  RuntimeClass *class_ = new RuntimeClass(stmt->name.lexeme, methods);
+  environment->assign(stmt->name.lexeme, class_);
+
+  return new RuntimeValue();
+};
 
 RuntimeValue *Evaluator::visit(FunctionDeclarationStmt *stmt) {
   environment->define(stmt->name.lexeme,

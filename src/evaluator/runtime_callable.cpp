@@ -34,3 +34,9 @@ std::string RuntimeFunction::as_string() const {
 }
 
 int RuntimeFunction::arity() const { return declaration.params.size(); }
+
+RuntimeFunction *find_class_method(RuntimeClass *class_, std::string name) {
+  return class_->find_method(name);
+}
+
+std::string get_class_name(RuntimeClass *class_) { return class_->name; }

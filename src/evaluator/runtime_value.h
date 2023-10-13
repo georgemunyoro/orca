@@ -12,7 +12,8 @@ enum RuntimeValueType {
   RT_NIL,
   RT_FUNCTION,
   RT_CALLABLE,
-  RT_ARRAY
+  RT_ARRAY,
+  RT_INSTANCE
 };
 
 class RuntimeValue {
