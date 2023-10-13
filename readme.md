@@ -1,4 +1,4 @@
-# Orca Programming Language Documentation
+# Orca Programming Language
 
 Orca is a neat little programming language that offers a blend of object-oriented and functional programming. Below is a brief overview of its core concepts, illustrated by examples.
 
@@ -134,7 +134,13 @@ An array can be defined and accessed as follows:
 
 ```orca
 var names = ["George", "James", "Harry", "William"];
-var numbers[10] = [1,2,3]; // You can also specify the initial arrays length. If the provided initializer will be filled with nil values to meet the length specifier requirements.
+```
+
+You can also specify the initial array's length. The provided initializer will be filled with nil values to meet the length specifier requirements.
+
+```orca
+var numbers[10] = [1,2,3];
+var people[100] = []; // An empty array of size 100.
 ```
 
 ## In Summary
