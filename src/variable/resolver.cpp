@@ -107,17 +107,19 @@ void Resolver::visit(ThisExpr *expr) {
 };
 
 void Resolver::visit(ArrayExpr *expr) {
+  resolve_expr(expr->length);
   for (auto val : expr->values)
     resolve_expr(val);
 };
 
-void Resolver::visit(IndexExpr *expr) { resolve_expr(expr->obj); };
+void Resolver::visit(IndexExpr *expr) {
+  resolve_expr(expr->index);
+  resolve_expr(expr->obj);
+};
 
 void Resolver::visit(SetIndexExpr *expr) {
   resolve_expr(expr->value);
-
   resolve_expr(expr->index);
-
   resolve_expr(expr->obj);
 };
 

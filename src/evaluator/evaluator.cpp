@@ -84,8 +84,13 @@ void Evaluator::execute_block(BlockStmt block, Environment *env) {
   Environment *previous = environment;
   environment = env;
 
-  for (Statement *statement : block.statements) {
-    evaluate(statement);
+  try {
+    for (Statement *statement : block.statements) {
+      evaluate(statement);
+    }
+  } catch (RuntimeValue *return_value) {
+    environment = previous;
+    throw return_value;
   }
 
   environment = previous;
@@ -116,18 +121,17 @@ RuntimeValue *Evaluator::visit(BinaryExpr *expr) {
     return new RuntimeValue(*left + *right);
 
   case GREATER:
-    return new RuntimeValue(left > right);
+    return new RuntimeValue(*left > *right);
   case GREATER_EQUAL:
-    return new RuntimeValue(left >= right);
+    return new RuntimeValue(*left >= *right);
   case LESS:
-    return new RuntimeValue(left < right);
+    return new RuntimeValue(*left < *right);
   case LESS_EQUAL:
-    return new RuntimeValue(left <= right);
-
+    return new RuntimeValue(*left <= *right);
   case EQUAL_EQUAL:
-    return new RuntimeValue(left == right);
+    return new RuntimeValue(*left == *right);
   case BANG_EQUAL:
-    return new RuntimeValue(left != right);
+    return new RuntimeValue(*left != *right);
   }
 
   return new RuntimeValue();
@@ -317,7 +321,9 @@ RuntimeValue *Evaluator::visit(WhileStmt *stmt) {
   return new RuntimeValue();
 };
 
-RuntimeValue *Evaluator::visit(ReturnStmt *stmt){};
+RuntimeValue *Evaluator::visit(ReturnStmt *stmt) {
+  throw evaluate(stmt->value);
+};
 
 RuntimeValue *Evaluator::visit(ClassStmt *stmt) {
   environment->define(stmt->name.lexeme, new RuntimeValue());

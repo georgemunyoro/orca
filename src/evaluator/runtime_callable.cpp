@@ -24,7 +24,11 @@ RuntimeValue *RuntimeFunction::call(Evaluator *evaluator,
     env->define(declaration.params[i].lexeme, arguments[i]);
   }
 
-  evaluator->execute_block(BlockStmt(declaration.body), env);
+  try {
+    evaluator->execute_block(BlockStmt(declaration.body), env);
+  } catch (RuntimeValue *return_value) {
+    return return_value;
+  }
 
   return new RuntimeValue();
 }
