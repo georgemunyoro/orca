@@ -1,7 +1,7 @@
 #include "expression.h"
 
 template <>
-RuntimeValue Expression::accept(ExpressionVisitor<RuntimeValue> &visitor) {
+RuntimeValue *Expression::accept(ExpressionVisitor<RuntimeValue *> &visitor) {
   return do_accept(visitor);
 }
 

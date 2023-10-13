@@ -6,18 +6,18 @@
 
 class Environment {
 public:
-  Environment(){};
+  Environment() : enclosing(nullptr){};
   Environment(Environment *enclosing) : enclosing(enclosing){};
 
-  void define(std::string name, RuntimeValue value);
+  void define(std::string name, RuntimeValue *value);
 
-  RuntimeValue assign(std::string name, RuntimeValue value);
-  RuntimeValue get(Token name);
-  RuntimeValue assign_at(int distance, std::string name, RuntimeValue value);
-  RuntimeValue get_at(int distance, Token name);
+  RuntimeValue *assign(std::string name, RuntimeValue *value);
+  RuntimeValue *get(Token name);
+  RuntimeValue *assign_at(int distance, std::string name, RuntimeValue *value);
+  RuntimeValue *get_at(int distance, Token name);
 
   Environment *ancestor(int distance);
 
-  std::unordered_map<std::string, RuntimeValue> final;
+  std::unordered_map<std::string, RuntimeValue *> final;
   Environment *enclosing;
 };

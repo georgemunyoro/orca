@@ -38,4 +38,10 @@ void Interpreter::run(std::string source) {
     printer.print(expr);
     resolver->resolve_expr(expr);
   }
+
+  printf("----------------------------------\n");
+
+  for (Expression *expr : exprs) {
+    evaluator->evaluate(expr);
+  }
 }

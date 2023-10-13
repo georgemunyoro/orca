@@ -1,6 +1,15 @@
 #include "runtime_value.h"
 
 bool RuntimeValue::is_callable() { return false; }
+bool RuntimeValue::is_truthy() {
+  if (is_nil())
+    return false;
+
+  if (is_bool())
+    return as_bool();
+
+  return true;
+}
 bool RuntimeValue::is_string() { return literal_value.type == STR; }
 bool RuntimeValue::is_number() { return literal_value.type == NUM; }
 bool RuntimeValue::is_bool() { return literal_value.type == BOOL; }
@@ -38,74 +47,4 @@ float RuntimeValue::as_number() const {
     throw std::runtime_error(
         "Attempted to convert non-numeric value into number.");
   return std::get<float>(literal_value.value);
-}
-
-RuntimeValue operator+(RuntimeValue lhs, RuntimeValue const &rhs) {
-  if (lhs.get_type() == RT_STRING && rhs.get_type() == RT_STRING) {
-    return RuntimeValue(lhs.as_string() + rhs.as_string());
-  }
-
-  if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER) {
-    return RuntimeValue(lhs.as_number() + rhs.as_number());
-  }
-
-  throw std::runtime_error("Cannot add different types.");
-}
-
-RuntimeValue operator*(RuntimeValue lhs, RuntimeValue const &rhs) {
-  if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER) {
-    return RuntimeValue(lhs.as_number() * rhs.as_number());
-  }
-
-  throw std::runtime_error("Cannot perform substraction on different types.");
-}
-
-RuntimeValue operator/(RuntimeValue lhs, RuntimeValue const &rhs) {
-  if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER) {
-    return RuntimeValue(lhs.as_number() / rhs.as_number());
-  }
-
-  throw std::runtime_error("Cannot perform division on different types.");
-}
-
-bool operator==(RuntimeValue lhs, RuntimeValue const &rhs) {
-  if (lhs.get_type() == RT_STRING && rhs.get_type() == RT_STRING)
-    return lhs.as_string() == rhs.as_string();
-
-  if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER)
-    return lhs.as_number() == rhs.as_number();
-
-  if (lhs.get_type() == RT_BOOL && rhs.get_type() == RT_BOOL)
-    return lhs.as_bool() == rhs.as_bool();
-
-  if (lhs.get_type() == RT_NIL && rhs.get_type() == RT_NIL)
-    return true;
-
-  throw std::runtime_error("Cannot perform division on different types.");
-}
-
-bool operator!=(RuntimeValue lhs, RuntimeValue const &rhs) {
-  return !(lhs == rhs);
-}
-
-bool operator<(RuntimeValue lhs, RuntimeValue const &rhs) {
-  if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER)
-    return lhs.as_number() < rhs.as_number();
-
-  throw std::runtime_error("Cannot perform division on different types.");
-}
-
-bool operator>(RuntimeValue lhs, RuntimeValue const &rhs) {
-  if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER)
-    return lhs.as_number() > rhs.as_number();
-
-  throw std::runtime_error("Cannot perform division on different types.");
-}
-
-bool operator<=(RuntimeValue lhs, RuntimeValue const &rhs) {
-  return lhs < rhs || lhs == rhs;
-}
-
-bool operator>=(RuntimeValue lhs, RuntimeValue const &rhs) {
-  return lhs > rhs || lhs == rhs;
 }

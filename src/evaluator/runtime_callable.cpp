@@ -6,27 +6,27 @@ std::string RuntimeCallable::as_string() const { return "<func>"; }
 
 int RuntimeCallable::arity() const { return 0; };
 
-RuntimeValue RuntimeCallable::call(Evaluator &evaluator,
-                                   std::vector<RuntimeValue> arguments) {
-  return RuntimeValue();
+RuntimeValue *RuntimeCallable::call(Evaluator *evaluator,
+                                    std::vector<RuntimeValue *> arguments) {
+  return new RuntimeValue();
 }
 
 // =======================
 // === RuntimeFunction ===
 // =======================
 
-RuntimeValue RuntimeFunction::call(Evaluator &evaluator,
-                                   std::vector<RuntimeValue> arguments) {
+RuntimeValue *RuntimeFunction::call(Evaluator *evaluator,
+                                    std::vector<RuntimeValue *> arguments) {
   Environment *env =
-      new Environment(closure == nullptr ? evaluator.environment : closure);
+      new Environment(closure == nullptr ? evaluator->environment : closure);
 
   for (int i = 0; i < arguments.size(); ++i) {
     env->define(declaration.params[i].lexeme, arguments[i]);
   }
 
-  evaluator.execute_block(BlockStmt(declaration.body), env);
+  evaluator->execute_block(BlockStmt(declaration.body), env);
 
-  return RuntimeValue();
+  return new RuntimeValue();
 }
 
 std::string RuntimeFunction::as_string() const {

@@ -8,9 +8,11 @@ public:
   bool is_callable() override;
   std::string as_string() const override;
 
+  RuntimeValueType get_type() const override { return RT_CALLABLE; };
+
   virtual int arity() const;
-  virtual RuntimeValue call(Evaluator &evaluator,
-                            std::vector<RuntimeValue> arguments);
+  virtual RuntimeValue *call(Evaluator *evaluator,
+                             std::vector<RuntimeValue *> arguments);
 };
 
 class Environment;
@@ -22,14 +24,18 @@ public:
 
   RuntimeFunction bind(RuntimeValue instance) {
     Environment *environment = new Environment(closure);
-    environment->define("this", instance);
+    environment->define("this", &instance);
     return RuntimeFunction(declaration, environment);
   }
 
-  RuntimeValue call(Evaluator &evaluator,
-                    std::vector<RuntimeValue> arguments) override;
+  RuntimeValue *call(Evaluator *evaluator,
+                     std::vector<RuntimeValue *> arguments) override;
   std::string as_string() const override;
   int arity() const override;
+
+  bool is_callable() override { return true; };
+
+  RuntimeValueType get_type() const override { return RT_FUNCTION; };
 
   FunctionDeclarationStmt declaration;
   Environment *closure = nullptr;

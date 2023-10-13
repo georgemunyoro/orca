@@ -5,7 +5,15 @@
 class Environment;
 class Evaluator;
 
-enum RuntimeValueType { RT_NUMBER, RT_BOOL, RT_STRING, RT_NIL };
+enum RuntimeValueType {
+  RT_NUMBER,
+  RT_BOOL,
+  RT_STRING,
+  RT_NIL,
+  RT_FUNCTION,
+  RT_CALLABLE,
+  RT_ARRAY
+};
 
 class RuntimeValue {
 public:
@@ -23,7 +31,7 @@ public:
   bool is_bool();
   bool is_nil();
 
-  RuntimeValueType get_type() const;
+  virtual RuntimeValueType get_type() const;
 
   float as_number() const;
   virtual std::string as_string() const;
@@ -33,4 +41,28 @@ public:
 
   Literal literal_value;
   bool is_literal_value;
+};
+
+class RuntimeArrayValue : public RuntimeValue {
+public:
+  RuntimeArrayValue(std::vector<RuntimeValue *> values)
+      : array_values(values){};
+
+  std::vector<RuntimeValue *> array_values;
+
+  void set(int index, RuntimeValue *updated_value) {
+    if (index < 0 || index >= array_values.size())
+      throw std::runtime_error("Index key out of bounds.");
+
+    array_values[index] = updated_value;
+  }
+
+  RuntimeValue *get(int index) {
+    if (index < 0 || index >= array_values.size())
+      throw std::runtime_error("Index key out of bounds.");
+
+    return array_values[index];
+  }
+
+  RuntimeValueType get_type() const override { return RT_ARRAY; }
 };
