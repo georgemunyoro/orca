@@ -1,6 +1,7 @@
 #include "evaluator.h"
 #include "../parser/ast_printer.h"
 #include "runtime_callable.h"
+#include "runtime_value.h"
 
 RuntimeValue operator-(RuntimeValue lhs, RuntimeValue const &rhs) {
   if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER) {
@@ -241,11 +242,19 @@ RuntimeValue *Evaluator::visit(IndexExpr *expr) {
   RuntimeValue *index = evaluate(expr->index);
   RuntimeValue *obj = evaluate(expr->obj);
 
-  if (obj->get_type() != RT_ARRAY)
-    throw std::runtime_error("Index should be into an array.");
+  if (obj->get_type() != RT_ARRAY && obj->get_type() != RT_STRING)
+    throw std::runtime_error("Index should be into an array or string.");
 
   if (!index->is_number())
     throw std::runtime_error("Index key should be a number.");
+
+  if (obj->get_type() == RT_STRING) {
+    if (index->as_number() < 0 || index->as_number() >= obj->as_string().size())
+      throw std::runtime_error("Index key not in range.");
+
+    return new RuntimeValue(
+        std::string(1, obj->as_string()[index->as_number()]));
+  }
 
   return ((RuntimeArrayValue *)obj)->get(index->as_number());
 };
