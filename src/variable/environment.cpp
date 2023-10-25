@@ -15,7 +15,7 @@ RuntimeValue *Environment::assign(std::string name, RuntimeValue *value) {
     return value;
   }
 
-  throw std::runtime_error("Undefined variable '" + name + "'.");
+  throw "Undefined variable '" + name + "'.";
 }
 
 RuntimeValue *Environment::get(Token name) {
@@ -25,7 +25,7 @@ RuntimeValue *Environment::get(Token name) {
   if (enclosing != nullptr)
     return enclosing->get(name);
 
-  throw std::runtime_error("Undefined variable '" + name.lexeme + "'.");
+  throw "Undefined variable '" + name.lexeme + "'.";
 }
 
 RuntimeValue *Environment::assign_at(int distance, std::string name,

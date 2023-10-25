@@ -8,7 +8,7 @@ RuntimeValue operator-(RuntimeValue lhs, RuntimeValue const &rhs) {
     return RuntimeValue(lhs.as_number() - rhs.as_number());
   }
 
-  throw std::runtime_error("Cannot add different types.");
+  throw "Cannot add different types.";
 }
 
 RuntimeValue operator+(RuntimeValue lhs, RuntimeValue const &rhs) {
@@ -20,7 +20,7 @@ RuntimeValue operator+(RuntimeValue lhs, RuntimeValue const &rhs) {
     return RuntimeValue(lhs.as_number() + rhs.as_number());
   }
 
-  throw std::runtime_error("Cannot add different types.");
+  throw "Cannot add different types.";
 }
 
 RuntimeValue operator*(RuntimeValue lhs, RuntimeValue const &rhs) {
@@ -28,7 +28,7 @@ RuntimeValue operator*(RuntimeValue lhs, RuntimeValue const &rhs) {
     return RuntimeValue(lhs.as_number() * rhs.as_number());
   }
 
-  throw std::runtime_error("Cannot perform substraction on different types.");
+  throw "Cannot perform substraction on different types.";
 }
 
 RuntimeValue operator/(RuntimeValue lhs, RuntimeValue const &rhs) {
@@ -36,7 +36,7 @@ RuntimeValue operator/(RuntimeValue lhs, RuntimeValue const &rhs) {
     return RuntimeValue(lhs.as_number() / rhs.as_number());
   }
 
-  throw std::runtime_error("Cannot perform division on different types.");
+  throw "Cannot perform division on different types.";
 }
 
 bool operator==(RuntimeValue lhs, RuntimeValue const &rhs) {
@@ -52,7 +52,7 @@ bool operator==(RuntimeValue lhs, RuntimeValue const &rhs) {
   if (lhs.get_type() == RT_NIL && rhs.get_type() == RT_NIL)
     return true;
 
-  throw std::runtime_error("Cannot perform division on different types.");
+  throw "Cannot perform division on different types.";
 }
 
 bool operator!=(RuntimeValue lhs, RuntimeValue const &rhs) {
@@ -63,14 +63,14 @@ bool operator<(RuntimeValue lhs, RuntimeValue const &rhs) {
   if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER)
     return lhs.as_number() < rhs.as_number();
 
-  throw std::runtime_error("Cannot perform division on different types.");
+  throw "Cannot perform division on different types.";
 }
 
 bool operator>(RuntimeValue lhs, RuntimeValue const &rhs) {
   if (lhs.get_type() == RT_NUMBER && rhs.get_type() == RT_NUMBER)
     return lhs.as_number() > rhs.as_number();
 
-  throw std::runtime_error("Cannot perform division on different types.");
+  throw "Cannot perform division on different types.";
 }
 
 bool operator<=(RuntimeValue lhs, RuntimeValue const &rhs) {
@@ -161,8 +161,8 @@ RuntimeValue *Evaluator::visit(UnaryExpr *expr) {
     return new RuntimeValue(!right->is_truthy());
 
   default:
-    throw std::runtime_error("Expected unary operation, found " +
-                             expr->op.lexeme);
+    throw "Expected unary operation, found " +
+                             expr->op.lexeme;
   }
 
   return new RuntimeValue();
@@ -178,12 +178,12 @@ RuntimeValue *Evaluator::visit(CallExpr *expr) {
   if (callee->is_callable()) {
     RuntimeFunction *callee_callable = (RuntimeFunction *)callee;
     if (arguments.size() != callee_callable->arity()) {
-      throw std::runtime_error("Received incorrect number of args.");
+      throw "Received incorrect number of args.";
     }
     return callee_callable->call(this, arguments);
   }
 
-  throw std::runtime_error("Attempted to call non-callable object.");
+  throw "Attempted to call non-callable object.";
 };
 
 RuntimeValue *Evaluator::visit(VariableReferenceExpr *expr) {
@@ -205,14 +205,14 @@ RuntimeValue *Evaluator::visit(GetExpr *expr) {
   if (obj->get_type() == RT_INSTANCE)
     return ((RuntimeClassInstance *)obj)->get(expr->name);
 
-  throw std::runtime_error("Only object instances have properties.");
+  throw "Only object instances have properties.";
 };
 
 RuntimeValue *Evaluator::visit(SetExpr *expr) {
   RuntimeValue *obj = evaluate(expr->obj);
 
   if (obj->get_type() != RT_INSTANCE)
-    throw std::runtime_error("Only instances have fields.");
+    throw "Only instances have fields.";
 
   RuntimeValue *value = evaluate(expr->value);
   ((RuntimeClassInstance *)obj)->set(expr->name, value);
@@ -243,14 +243,14 @@ RuntimeValue *Evaluator::visit(IndexExpr *expr) {
   RuntimeValue *obj = evaluate(expr->obj);
 
   if (obj->get_type() != RT_ARRAY && obj->get_type() != RT_STRING)
-    throw std::runtime_error("Index should be into an array or string.");
+    throw "Index should be into an array or string.";
 
   if (!index->is_number())
-    throw std::runtime_error("Index key should be a number.");
+    throw "Index key should be a number.";
 
   if (obj->get_type() == RT_STRING) {
     if (index->as_number() < 0 || index->as_number() >= obj->as_string().size())
-      throw std::runtime_error("Index key not in range.");
+      throw "Index key not in range.";
 
     return new RuntimeValue(
         std::string(1, obj->as_string()[index->as_number()]));
@@ -265,14 +265,14 @@ RuntimeValue *Evaluator::visit(SetIndexExpr *expr) {
   RuntimeValue *obj = evaluate(expr->obj);
 
   if (obj->get_type() != RT_ARRAY)
-    throw std::runtime_error("Index should be into an array.");
+    throw "Index should be into an array.";
 
   if (!index->is_number())
-    throw std::runtime_error("Index key should be a number.");
+    throw "Index key should be a number.";
 
   if (index->as_number() < 0 ||
       index->as_number() >= ((RuntimeArrayValue *)obj)->array_values.size())
-    throw std::runtime_error("Index key not in range.");
+    throw "Index key not in range.";
 
   ((RuntimeArrayValue *)obj)->set(index->as_number(), value);
 

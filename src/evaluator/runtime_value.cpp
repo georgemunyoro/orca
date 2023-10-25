@@ -29,7 +29,7 @@ RuntimeValueType RuntimeValue::get_type() const {
     }
   }
 
-  throw std::runtime_error("Unable to implicitly discern type of value.");
+  throw "Unable to implicitly discern type of value.";
 }
 
 std::string RuntimeValue::as_string() const {
@@ -38,13 +38,13 @@ std::string RuntimeValue::as_string() const {
 
 bool RuntimeValue::as_bool() const {
   if (get_type() != RT_BOOL)
-    throw std::runtime_error("Attempted to convert non-bool value into bool.");
+    throw "Attempted to convert non-bool value into bool.";
   return std::get<bool>(literal_value.value);
 }
 
 float RuntimeValue::as_number() const {
   if (get_type() != RT_NUMBER)
-    throw std::runtime_error(
-        "Attempted to convert non-numeric value into number.");
+    throw 
+        "Attempted to convert non-numeric value into number.";
   return std::get<float>(literal_value.value);
 }

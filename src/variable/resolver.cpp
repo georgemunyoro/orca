@@ -35,10 +35,10 @@ void Resolver::declare(Token name) {
     return;
 
   if (scopes.back().count(name.lexeme)) {
-    throw std::runtime_error(
+    throw 
         "Attempted to declare variable '" + name.lexeme +
         "Attempted to declare variable '{name.lexeme}' when another variable "
-        "was already declared with the same name within the scope.");
+        "was already declared with the same name within the scope.";
   }
 
   scopes.back().insert_or_assign(name.lexeme, false);
@@ -87,8 +87,8 @@ void Resolver::visit(VariableReferenceExpr *expr) {
   if (!scopes.empty() && (scopes.back().count(expr->op.lexeme) > 0
                               ? scopes.back().at(expr->op.lexeme)
                               : true) == false)
-    throw std::runtime_error(
-        "Cannot read local variable in it's own initializer");
+    throw 
+        "Cannot read local variable in it's own initializer";
 
   resolve_local(expr, expr->op);
 };
@@ -102,7 +102,7 @@ void Resolver::visit(SetExpr *expr) {
 
 void Resolver::visit(ThisExpr *expr) {
   if (current_class == RES_CL_NONE)
-    throw std::runtime_error("Invalid use of 'this' outside of a class.");
+    throw "Invalid use of 'this' outside of a class.";
   resolve_local(expr, expr->keyword);
 };
 
@@ -159,7 +159,7 @@ void Resolver::visit(WhileStmt *stmt) {
 
 void Resolver::visit(ReturnStmt *stmt) {
   if (current_function == RES_FN_NONE)
-    throw std::runtime_error("Invalid use of return outside of a function");
+    throw "Invalid use of return outside of a function";
   resolve_expr(stmt->value);
 };
 

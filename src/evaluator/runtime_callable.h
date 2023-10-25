@@ -72,7 +72,7 @@ public:
       return method->bind(this);
     }
 
-    throw std::runtime_error("Undefined property " + name.lexeme);
+    throw "Undefined property " + name.lexeme;
   }
 
   RuntimeClass *class_;

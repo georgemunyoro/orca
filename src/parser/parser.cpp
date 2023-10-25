@@ -185,7 +185,7 @@ Expression *Parser::variable_declaration() {
     ArrayExpr *arrLenSpecifier = (ArrayExpr *)array();
 
     if (arrLenSpecifier->values.size() == 0)
-      throw std::runtime_error("Array length specifier required.");
+      throw "Array length specifier required.";
 
     auto arrLen = arrLenSpecifier->values[0];
     consume(RIGHT_BRACK, "Expect ']' after array length specifier.");
@@ -198,8 +198,8 @@ Expression *Parser::variable_declaration() {
     auto expr = expression();
     if (initializer_set) {
       if (expr->getType() != ARRAY_EXPR)
-        throw std::runtime_error("Declared array with length specifier but "
-                                 "used non-array initializer.");
+        throw "Declared array with length specifier but "
+                                 "used non-array initializer.";
 
       ((ArrayExpr *)initializer)->values = ((ArrayExpr *)expr)->values;
     } else {
@@ -232,7 +232,7 @@ Expression *Parser::assignment() {
       return new SetIndexExpr(v->obj, v->index, value);
     }
 
-    throw std::runtime_error("Invalid assignment target");
+    throw "Invalid assignment target";
   }
 
   return expr;
@@ -389,7 +389,7 @@ Token Parser::consume(TokenType type, std::string message) {
   if (check(type))
     return advance();
 
-  throw std::runtime_error(message);
+  throw message;
 }
 
 bool Parser::match(std::vector<TokenType> types) {

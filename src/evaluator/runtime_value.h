@@ -53,14 +53,14 @@ public:
 
   void set(int index, RuntimeValue *updated_value) {
     if (index < 0 || index >= array_values.size())
-      throw std::runtime_error("Index key out of bounds.");
+      throw "Index key out of bounds.";
 
     array_values[index] = updated_value;
   }
 
   RuntimeValue *get(int index) {
     if (index < 0 || index >= array_values.size())
-      throw std::runtime_error("Index key out of bounds.");
+      throw "Index key out of bounds.";
 
     return array_values[index];
   }

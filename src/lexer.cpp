@@ -1,5 +1,4 @@
 #include "lexer.h"
-#include <_ctype.h>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -54,7 +53,7 @@ void Lexer::scan_string() {
   }
 
   if (is_at_end())
-    throw std::runtime_error("Unterminated string.");
+    throw "Unterminated string.";
 
   advance();
 
@@ -155,7 +154,7 @@ void Lexer::scan_token() {
     break;
 
   default:
-    throw std::runtime_error("Unexpected character.");
+    throw "Unexpected character.";
   }
 }
 
